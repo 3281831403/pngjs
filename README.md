@@ -122,10 +122,16 @@ As input any color type is accepted (grayscale, rgb, palette, grayscale with alp
 - `deflateStrategy` - compression strategy for deflate (default: 3)
 - `deflateFactory` - deflate stream factory (default: `zlib.createDeflate`)
 - `filterType` - png filtering method for scanlines (default: -1 => auto, accepts array of numbers 0-4)
-- `colorType` - the output colorType - see constants. 0 = grayscale, no alpha, 2 = color, no alpha, 4 = grayscale & alpha, 6 = color & alpha. Default currently 6, but in the future may calculate best mode.
+- `colorType` - the output colorType - see constants. 0 = grayscale, no alpha, 2 = color, no alpha, 3 = palette, 4 = grayscale & alpha, 6 = color & alpha. Default currently 6, but in the future may calculate best mode.
 - `inputColorType` - the input colorType - see constants. Default is 6 (RGBA)
-- `bitDepth` - the bitDepth of the output, 8 or 16 bits. Input data is expected to have this bit depth.
+- `bitDepth` - the bitDepth of the output, 8 or 16 bits (1, 2, 4 or 8 when `colorType` is 3). Input data is expected to have this bit depth.
   16 bit data is expected in the system endianness (Default: 8)
+- `palette` - required when `colorType` is 3. An array of `[r, g, b, a]` entries
+  with values from 0 to 255. Each input pixel must match an entry exactly; colours
+  not present in the palette are an error, nothing is quantised. The palette may
+  contain at most `2^bitDepth` entries. Entries are written to `PLTE`; when any
+  entry has `a < 255`, the alpha values up to the last non-opaque entry are
+  written to `tRNS`, otherwise no `tRNS` chunk is emitted.
 - `inputHasAlpha` - whether the input bitmap has 4 bytes per pixel (rgb and alpha) or 3 (rgb - no alpha).
 - `bgColor` - an object containing red, green, and blue values between 0 and 255
   that is used when packing a PNG if alpha is not to be included (default: 255,255,255)
